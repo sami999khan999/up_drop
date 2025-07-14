@@ -1,0 +1,39 @@
+services:
+  web:
+    container_name: up_drop_frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+    env_file:
+      - ./frontend/.env.local
+
+    develop:
+      watch:
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package-lock.json
+          action: rebuild
+        - path: ./frontend
+          target: /app
+          action: sync
+
+    depends_on:
+      - api
+
+  api:
+    container_name: up_drop_backend
+    build: ./backend
+    ports:
+      - 8000:8000
+    env_file:
+      - ./backend/.env
+
+    develop:
+      watch:
+        - path: ./backend/package.json
+          action: rebuild
+        - path: ./backend/package-lock.json
+          action: rebuild
+        - path: ./backend
+          target: /app
+          action: sync
