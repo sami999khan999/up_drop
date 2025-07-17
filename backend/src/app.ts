@@ -3,6 +3,8 @@ import cors from "cors";
 import { db } from "./drizzle/db";
 import { usersTable } from "./drizzle/schema";
 import "dotenv/config";
+import { errorMiddleware } from "./middleware/errorMiddleware";
+import { CustomError } from "./utils/customError";
 
 const app = express();
 const port = process.env.POST || 8000;
@@ -10,15 +12,20 @@ const port = process.env.POST || 8000;
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000" }));
 
-app.use("/", async (req, res) => {
-  await db.insert(usersTable).values({
-    name: "John Doe",
-    age: 28,
-    email: "johnwick13@example.com",
-  });
-
-  res.status(200).json({ message: "Hello World!" });
+app.use("/", async (req, res, next) => {
+  try {
+    console.log("================");
+    throw new CustomError({
+      message: "Hello World!",
+      statusCode: 200,
+      errorDetails: [],
+    });
+  } catch (err) {
+    next(err);
+  }
 });
+
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
