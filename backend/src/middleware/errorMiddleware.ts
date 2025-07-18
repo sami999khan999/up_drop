@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../utils/customError";
+import { CustomError } from "../errors/customError";
 
 export const errorMiddleware = (
   err: any,
@@ -7,8 +7,6 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  // console.log(err);
-
   if (err instanceof CustomError) {
     return res
       .status(err.statusCode)

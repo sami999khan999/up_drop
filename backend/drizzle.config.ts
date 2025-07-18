@@ -1,5 +1,5 @@
 import { defineConfig } from "drizzle-kit";
-import { CustomError } from "./src/utils/customError";
+import { CustomError } from "./src/errors/customError";
 
 if (!process.env.DATABASE_URL) {
   throw new CustomError({
