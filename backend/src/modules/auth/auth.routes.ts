@@ -1,8 +1,13 @@
 import { Router } from "express";
+import bodyParser from "body-parser";
 import { webhookController } from "./auth.controller";
 
-const route = Router();
+const router = Router();
 
-route.post("/webhook", webhookController);
+router.post(
+  "/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  webhookController
+);
 
-export default route;
+export default router;

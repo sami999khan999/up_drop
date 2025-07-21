@@ -10,12 +10,6 @@ const Page = () => {
     if (!isLoaded) return; // wait until Clerk finishes loading
 
     console.log("userId:", userId); // now it's safe
-
-    fetch("http://localhost:8000/", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
   }, [isLoaded, userId]);
 
   if (!isLoaded) {
