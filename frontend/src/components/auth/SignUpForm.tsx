@@ -1,10 +1,8 @@
 "use client";
 
 import { useAuthSignUp } from "@/hooks/useAuthSignUp";
-import { useOauth } from "@/hooks/useOauth";
 import { signUpSchema } from "@/zod/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
 import OauthButton from "./OauthButton";
 

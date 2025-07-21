@@ -13,7 +13,5 @@ export const errorMiddleware = (
       .json({ success: false, ...err.serializeErrors() });
   }
 
-  return res
-    .status(500)
-    .json({ success: false, message: "Something went wrong" });
+  return res.status(500).json({ success: false, message: err.message });
 };

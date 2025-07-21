@@ -1,9 +1,7 @@
-
-
 import SignInForm from "@/components/auth/SignInForm";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <SignInForm />
@@ -11,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -21,7 +21,6 @@ export const useAuthSignUp = () => {
 
   const onSubmit = useCallback(
     async (data: SignUpSchemaType) => {
-      console.log(data);
       if (!isLoaded) return;
 
       setIsLoading(true);
@@ -44,7 +43,7 @@ export const useAuthSignUp = () => {
         setIsLoading(false);
       }
     },
-    [isLoaded, signUp]
+    [isLoaded, signUp, isLoaded, signUp]
   );
 
   const handelVerification = useCallback(async () => {
@@ -78,13 +77,13 @@ export const useAuthSignUp = () => {
     } catch (err) {
       console.log("Resend Verification Error: ", err);
     }
-  }, []);
+  }, [isLoaded, signUp]);
 
   useEffect(() => {
     if (verificationCode.length === 6) {
       handelVerification();
     }
-  }, [verificationCode]);
+  }, [verificationCode, handelVerification]);
 
   return {
     onSubmit,

@@ -1,25 +1,19 @@
-import express from "express";
+import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
-import { db } from "./drizzle/db";
-import { usersTable } from "./drizzle/schema";
 import "dotenv/config";
+import express from "express";
 import { errorMiddleware } from "./middleware/errorMiddleware";
-import { CustomError } from "./errors/customError";
+import authRoutes from "./modules/auth/auth.routes";
 
 const app = express();
 const port = process.env.POST || 8000;
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use("/", async (req, res, next) => {
-  console.log("============");
-  throw new CustomError({
-    message: "Hello World!",
-    statusCode: 400,
-    errorDetails: [],
-  });
-});
+app.use(clerkMiddleware());
+
+app.use("/auth", authRoutes);
 
 app.use(errorMiddleware);
 

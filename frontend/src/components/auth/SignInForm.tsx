@@ -2,9 +2,7 @@
 
 import { useAuthSIgnIn } from "@/hooks/useAuthSignIn";
 import { signInSchema } from "@/zod/signInSchema";
-import { signUpSchema } from "@/zod/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
 import OauthButton from "./OauthButton";
 

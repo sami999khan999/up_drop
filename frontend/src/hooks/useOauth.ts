@@ -12,12 +12,11 @@ export const useOauth = () => {
     setIsLoadingGoogle(true);
 
     try {
-      const result = await signIn.authenticateWithRedirect({
+      await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
         redirectUrlComplete: "/",
       });
-      console.log(result);
     } catch (err) {
       console.log("Google Oauth Error: ", err);
     } finally {

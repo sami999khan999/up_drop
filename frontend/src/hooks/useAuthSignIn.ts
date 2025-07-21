@@ -40,7 +40,7 @@ export const useAuthSIgnIn = () => {
         setIsLoading(false);
       }
     },
-    [signIn, isLoaded]
+    [signIn, isLoaded, router, setActive]
   );
 
   return {

@@ -1,7 +1,7 @@
 import SignUpForm from "@/components/auth/SignUpForm";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <SignUpForm />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
