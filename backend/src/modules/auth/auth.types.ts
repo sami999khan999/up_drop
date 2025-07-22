@@ -4,3 +4,8 @@ export interface NewUserType {
   email: string;
   imageUrl?: string;
 }
+
+export interface UpdateUserType {
+  name?: string | null;
+  imageUrl?: string | null;
+}

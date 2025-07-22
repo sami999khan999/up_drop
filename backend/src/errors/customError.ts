@@ -29,8 +29,6 @@ export class CustomError extends Error {
     const errorCode =
       statusCodeMap[status.toString() as keyof typeof statusCodeMap];
 
-    console.log(errorCode);
-
     if (errorCode) return errorCode;
 
     return "UNKNOWN_ERROR";
@@ -40,10 +38,8 @@ export class CustomError extends Error {
     const errorCode = this.errorCode || this.getErrorCode(this.statusCode);
     const baseError = { message: this.message, errorCode: errorCode };
     if (this.errorDetails) {
-      console.log("Inside if");
       return { ...baseError, errorDetails: this.errorDetails };
     }
-    console.log("Outside if");
     return { ...baseError };
   }
 }
