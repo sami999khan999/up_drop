@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInSchemaType } from "@/zod/signInSchema";
+import { SignInSchemaType } from "@/types/auth.types";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";

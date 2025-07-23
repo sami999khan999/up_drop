@@ -4,10 +4,11 @@ import { useAuthSIgnIn } from "@/hooks/useAuthSignIn";
 import { signInSchema } from "@/zod/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import AuthInputField from "../ui/AuthInputField";
 import OauthButton from "./OauthButton";
 
 const SignInForm = () => {
-  const { onSubmit } = useAuthSIgnIn();
+  const { onSubmit, showPassword, setShowPassword } = useAuthSIgnIn();
 
   const {
     register,
@@ -24,18 +25,22 @@ const SignInForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          placeholder="Email or username"
-          {...register("identifier")}
+        <AuthInputField
+          register={register("identifier")}
+          placeholder="test@gmail.com"
+          error={errors.identifier?.message}
+          label="Email or username"
+          type="email"
         />
-        <p>{errors.identifier?.message}</p>
-        <input
-          type="password"
-          placeholder="Password"
-          {...register("password")}
+        <AuthInputField
+          register={register("password")}
+          placeholder="••••••••"
+          error={errors.password?.message}
+          label="Password"
+          type={showPassword ? "text" : "password"}
+          isVesible={showPassword}
+          setIsVesible={setShowPassword}
         />
-        <p>{errors.password?.message}</p>
         <button type="submit">Sign In</button>
       </form>
       <OauthButton />

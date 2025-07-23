@@ -5,9 +5,18 @@ import { signUpSchema } from "@/zod/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import OauthButton from "./OauthButton";
+import AuthInputField from "../ui/AuthInputField";
 
 const SignUpForm = () => {
-  const { onSubmit, verifying, setVerificationCode } = useAuthSignUp();
+  const {
+    onSubmit,
+    verifying,
+    setVerificationCode,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+  } = useAuthSignUp();
 
   const {
     register,
@@ -39,13 +48,31 @@ const SignUpForm = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("email")} placeholder="Email" />
-        <input {...register("password")} placeholder="Password" />
-        <input
-          {...register("confirmPassword")}
-          placeholder="Confirm Password"
+        <AuthInputField
+          register={register("email")}
+          placeholder="test@gmail.com"
+          error={errors.email?.message}
+          label="Email or username"
+          type="email"
         />
-        <div id="clerk-captcha" />
+        <AuthInputField
+          register={register("password")}
+          placeholder="••••••••"
+          error={errors.password?.message}
+          label="Password"
+          type="password"
+          isVesible={showPassword}
+          setIsVesible={setShowPassword}
+        />
+        <AuthInputField
+          register={register("confirmPassword")}
+          placeholder="••••••••"
+          error={errors.confirmPassword?.message}
+          label="Confirm Password"
+          type="password"
+          isVesible={showConfirmPassword}
+          setIsVesible={setShowConfirmPassword}
+        />
         <button type="submit">Sign Up</button>
       </form>
       <OauthButton />
