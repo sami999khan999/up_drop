@@ -7,9 +7,9 @@ const Page = () => {
   const { userId, isLoaded } = useAuth();
 
   useEffect(() => {
-    if (!isLoaded) return; // wait until Clerk finishes loading
+    if (!isLoaded) return;
 
-    console.log("userId:", userId); // now it's safe
+    console.log("userId:", userId);
   }, [isLoaded, userId]);
 
   if (!isLoaded) {
@@ -18,7 +18,9 @@ const Page = () => {
 
   return (
     <div>
-      <button onClick={() => signOut()}>Logout</button>
+      <button onClick={() => signOut()} className="text-text">
+        Logout
+      </button>
       <p>Your user ID is: {userId}</p>
     </div>
   );

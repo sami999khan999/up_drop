@@ -1,5 +1,7 @@
+import { cn } from "@/utils/cn";
 import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { PiEyeSlashThin, PiEyeThin } from "react-icons/pi";
 
 const AuthInputField = ({
   register,
@@ -9,20 +11,42 @@ const AuthInputField = ({
   type,
   isVesible,
   setIsVesible,
+  icon,
 }: {
   register: UseFormRegisterReturn<string>;
   placeholder: string;
   error: string | undefined;
   label: string;
-  type: string;
+  type: React.HTMLInputTypeAttribute;
   isVesible?: boolean;
   setIsVesible?: React.Dispatch<React.SetStateAction<boolean>>;
+  icon?: React.ReactNode;
 }) => {
   return (
-    <div>
-      <p>{label}</p>
-      <input {...register} type={type} placeholder={placeholder} />
-      <p>{!!error && error}</p>
+    <div className="mb-space-base">
+      <p className="mb-space-xs text-14 text-text ml-space-xs">{label}</p>
+      <div className="relative text-base">
+        <input
+          {...register}
+          type={type === "password" && isVesible ? "text" : type}
+          placeholder={placeholder}
+          className={cn(
+            "w-full border border-border-muted text-text-muted px-3 py-3 pl-10 rounded-xl bg-bg outline-none"
+          )}
+        />
+        <div className="text-text absolute top-1/2 left-3 -translate-y-1/2">
+          {icon}
+        </div>
+        {type === "password" && (
+          <div
+            className="text-text absolute top-1/2 right-3 -translate-y-1/2"
+            onClick={() => !!setIsVesible && setIsVesible((prev) => !prev)}
+          >
+            {isVesible ? <PiEyeThin /> : <PiEyeSlashThin />}
+          </div>
+        )}
+      </div>
+      <p className="text-sm text-danger mt-space-xs">{!!error && error}</p>
     </div>
   );
 };
