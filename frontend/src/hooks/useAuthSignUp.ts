@@ -66,16 +66,23 @@ export const useAuthSignUp = () => {
     } catch (err) {
       setVerificationCodeError(true);
       console.log("Unexpected Auth Verification Error: ", err);
+    } finally {
+      setIsLoading(true);
     }
   }, [isLoaded, signUp, verificationCode, router, setActive]);
 
   const resendVerificationCode = useCallback(async () => {
     if (!isLoaded) return;
 
+    setIsLoading(true);
+
     try {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      setVerifying(true);
     } catch (err) {
       console.log("Resend Verification Error: ", err);
+    } finally {
+      setIsLoading(false);
     }
   }, [isLoaded, signUp]);
 

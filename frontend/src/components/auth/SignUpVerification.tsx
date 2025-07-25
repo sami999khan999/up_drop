@@ -1,27 +1,28 @@
 import { cn } from "@/utils/cn";
-import { useRef, useState, useEffect } from "react"; // Import useState and useEffect
+import React, { useEffect, useRef, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const SignUpVerification = ({
   isVerifying,
-  setVerificationCode,
   resendCode,
+  setVerificationCode,
+  isLoading,
 }: {
   isVerifying: boolean;
   setVerificationCode: React.Dispatch<React.SetStateAction<string>>;
   resendCode: () => void;
+  isLoading: boolean;
 }) => {
   const numberOfFields = 6;
-  const [codes, setCodes] = useState<string[]>(
-    new Array(numberOfFields).fill("")
-  );
+  const [codes, setCodes] = useState(new Array(numberOfFields).fill(""));
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [count, setCount] = useState(20);
+  const [countdownTrigger, setCountdownTrigger] = useState(false);
 
-  const handleChange = (value: string, index: number) => {
-    const char = value.slice(-1);
+  const handelChange = (val: string, index: number) => {
+    const char = val.slice(-1);
 
-    if (!/^[0-9]$/.test(char) && char !== "") {
-      return;
-    }
+    if (!/^[0-9]$/.test(char) && char !== "") return;
 
     const newCodes = [...codes];
     newCodes[index] = char;
@@ -52,26 +53,27 @@ const SignUpVerification = ({
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent) => {
+  const handelPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
+
     const paste = e.clipboardData
       .getData("text")
       .trim()
       .slice(0, numberOfFields);
 
-    if (!/^\d*$/.test(paste)) {
-      return;
-    }
+    if (!/^\d*$/.test(paste)) return;
 
     const newCodes = new Array(numberOfFields).fill("");
+
     paste.split("").forEach((char, i) => {
-      if (i < numberOfFields) {
-        newCodes[i] = char;
-      }
+      if (i < numberOfFields) newCodes[i] = char;
     });
+
     setCodes(newCodes);
+
     const lastFilledIndex = paste.length > 0 ? paste.length - 1 : 0;
     const focusIndex = Math.min(lastFilledIndex, numberOfFields - 1);
+
     if (inputRefs.current[focusIndex + 1]) {
       inputRefs.current[focusIndex + 1]?.focus();
     } else {
@@ -79,62 +81,110 @@ const SignUpVerification = ({
     }
   };
 
+  const handelResendCode = async () => {
+    await resendCode();
+
+    if (!isLoading) {
+      setCount(20);
+      setCountdownTrigger((prev) => !prev);
+    }
+  };
+
   useEffect(() => {
     setVerificationCode(codes.join(""));
   }, [codes, setVerificationCode]);
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (isVerifying) {
+      intervalId = setInterval(() => {
+        setCount((prevCount) => {
+          if (prevCount <= 1) {
+            if (intervalId) {
+              clearInterval(intervalId);
+            }
+            return 0;
+          }
+          return prevCount - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isVerifying, countdownTrigger]);
+
+  console.log("===========================");
+  console.log(isLoading);
+  console.log("===========================");
+
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 w-full h-full transition-all duration-300 ease-in-out z-10",
+        "absolute top-0 left-0 w-full h-full transition-all ease-in-out z-10 duration-300 border border-border-muted bg-bg rounded-xl p-space-xl",
         isVerifying
-          ? "translate-y-0 opacity-100 scale-100 pointer-events-auto"
-          : "translate-y-full opacity-0 scale-50 pointer-events-none"
+          ? "translate-y-0 animate-in"
+          : "translate-y-full animate-out"
       )}
     >
-      <div className="bg-white w-full h-full flex justify-center items-center">
-        <div className="max-w-sm w-full mx-auto bg-white rounded-xl p-6 shadow-lg text-center">
-          <h2 className="text-lg font-semibold text-primary mb-1">
-            Enter Verification Code
-          </h2>
-          <p className="text-sm text-gray-600 mb-6">We’ve sent a code to </p>
-
-          <div className="flex justify-center gap-3 mb-4" onPaste={handlePaste}>
-            {Array.from({ length: numberOfFields }).map((_, i) => (
-              <input
-                key={i}
-                type="text"
-                maxLength={1}
-                value={codes[i]}
-                onChange={(e) => handleChange(e.target.value, i)}
-                onKeyDown={(e) => handleKeyDown(e, i)}
-                ref={(el) => {
-                  inputRefs.current[i] = el;
-                }}
-                className="w-12 h-14 text-center text-2xl font-bold border rounded-md border-blue-200 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                autoComplete="one-time-code"
-              />
-            ))}
-          </div>
-
-          <p className="text-xs text-gray-500 mb-4">
-            Didn’t get a code?{" "}
-            <button
-              onClick={resendCode}
-              className="text-blue-600 hover:underline font-medium"
-            >
-              Click to Resend
-            </button>
-          </p>
-
-          <button
-            type="button"
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded-md text-sm font-semibold tracking-wide hover:opacity-90 transition"
+      <div className="flex flex-col justify-center items-center h-full ">
+        <div className="flex justify-between items-center w-full">
+          {Array.from({ length: numberOfFields }).map((_, i) => (
+            <input
+              key={i}
+              type="text"
+              maxLength={1}
+              onChange={(e) => handelChange(e.target.value, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              onPaste={handelPaste}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
+              value={codes[i]}
+              pattern="[0-9]*"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              className="w-12 h-14 text-center text-2xl text-text rounded-md border-2 border-border-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          ))}
+        </div>
+        <div className="ml-auto text-text border border-border-muted h-[2rem] relative w-[50%]  mt-space-base rounded-md">
+          <div
+            className={cn(
+              "absolute bg-bg text-14 duration-200 h-full w-full flex items-center justify-center rounded-md",
+              count > 0
+                ? "translate-y-0 animate-in"
+                : "translate-y-full animate-out"
+            )}
           >
-            VERIFY
+            Re-Send Code In{" "}
+            <span className="text-primary pl-space-xs">{count}</span>s
+          </div>
+          <button
+            className={cn(
+              "absolute bg-bg text-14 duration-200 h-full w-full hover:bg-bg-light cursor-pointer flex items-center justify-center rounded-md",
+              count === 0 && !isLoading
+                ? "-translate-y-0 animate-in"
+                : "-translate-y-full animate-out"
+            )}
+            onClick={handelResendCode}
+          >
+            Send Code
           </button>
+          <div
+            className={cn(
+              "absolute bg-bg text-14 duration-200 h-full w-full flex items-center justify-center rounded-md",
+              count === 0 && isLoading
+                ? "translate-y-0 animate-in"
+                : "translate-y-full animate-out"
+            )}
+          >
+            <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+          </div>
         </div>
       </div>
     </div>

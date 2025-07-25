@@ -31,8 +31,10 @@ const AuthInputField = ({
           type={type === "password" && isVesible ? "text" : type}
           placeholder={placeholder}
           className={cn(
-            "w-full border border-border-muted text-text-muted px-3 py-3 pl-10 rounded-xl bg-bg outline-none"
+            "w-full border border-border-muted text-text-muted py-3 px-10 rounded-lg bg-bg outline-none"
           )}
+          inputMode={type === "email" ? "email" : "text"}
+          autoComplete={type === "email" ? "email" : "off"}
         />
         <div className="text-text absolute top-1/2 left-3 -translate-y-1/2">
           {icon}

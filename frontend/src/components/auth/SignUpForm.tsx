@@ -11,8 +11,8 @@ import { CiLock, CiMail, CiUnlock } from "react-icons/ci";
 import Button from "../ui/Button";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import SignUpVerification from "./SignUpVerification";
 import { useState } from "react";
+import SignUpVerification from "./SignUpVerification";
 
 const SignUpForm = () => {
   const {
@@ -52,9 +52,7 @@ const SignUpForm = () => {
           onSubmit={handleSubmit(onSubmit)}
           className={cn(
             "duration-200",
-            veri
-              ? "opacity-0 scale-50 pointer-events-none"
-              : "scale-100 opacity-100"
+            verifying ? "animate-out" : "animate-in"
           )}
         >
           <h2 className="mb-space-base">Sign Up</h2>
@@ -103,7 +101,8 @@ const SignUpForm = () => {
         <SignUpVerification
           setVerificationCode={setVerificationCode}
           resendCode={resendVerificationCode}
-          isVerifying={veri}
+          isVerifying={verifying}
+          isLoading={isLoading}
         />
       </div>
       <div>
