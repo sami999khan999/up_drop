@@ -43,7 +43,7 @@ export const useAuthSignUp = () => {
         setIsLoading(false);
       }
     },
-    [isLoaded, signUp, isLoaded, signUp]
+    [isLoaded, signUp]
   );
 
   const handelVerification = useCallback(async () => {

@@ -54,7 +54,7 @@ const SignInForm = () => {
           Sign in
         </Button>
         <div className="text-text-muted text-14 mt-space-sm">
-          Don't have an account?{" "}
+          {`${"Don't have an account?"}`}
           <Link
             href={"/register"}
             className="text-primary text-14 cursor-pointer hover:underline"

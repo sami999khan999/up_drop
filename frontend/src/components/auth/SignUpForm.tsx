@@ -1,17 +1,17 @@
 "use client";
 
 import { useAuthSignUp } from "@/hooks/useAuthSignUp";
+import { cn } from "@/utils/cn";
 import { signUpSchema } from "@/zod/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import OauthButton from "./OauthButton";
-import AuthInputField from "../ui/AuthInputField";
-import AuthFormWrapper from "../ui/AuthFormWrapper";
-import { CiLock, CiMail, CiUnlock } from "react-icons/ci";
-import Button from "../ui/Button";
 import Link from "next/link";
-import { cn } from "@/utils/cn";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { CiMail, CiUnlock } from "react-icons/ci";
+import AuthFormWrapper from "../ui/AuthFormWrapper";
+import AuthInputField from "../ui/AuthInputField";
+import Button from "../ui/Button";
+import OauthButton from "./OauthButton";
 import SignUpVerification from "./SignUpVerification";
 
 const SignUpForm = () => {
