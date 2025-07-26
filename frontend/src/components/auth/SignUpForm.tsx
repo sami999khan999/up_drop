@@ -13,6 +13,7 @@ import AuthInputField from "../ui/AuthInputField";
 import Button from "../ui/Button";
 import OauthButton from "./OauthButton";
 import SignUpVerification from "./SignUpVerification";
+import { useToast } from "@/hooks/useToast";
 
 const SignUpForm = () => {
   const {
@@ -44,6 +45,8 @@ const SignUpForm = () => {
   console.log(errors);
 
   const [veri, setveri] = useState(false);
+
+  const toast = useToast();
 
   return (
     <AuthFormWrapper>
@@ -113,7 +116,18 @@ const SignUpForm = () => {
         </div>
         <OauthButton />
       </div>
-      <Button onClick={() => setveri(!veri)}>click</Button>
+      <Button
+        onClick={() =>
+          toast({
+            title: "Test",
+            varient: "success",
+            subtitle:
+              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ut nostrum error, placeat perspiciatis nam temporibus aperiam eaque nesciunt. Impedit.",
+          })
+        }
+      >
+        click
+      </Button>
     </AuthFormWrapper>
   );
 };

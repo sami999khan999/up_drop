@@ -21,6 +21,7 @@
   --text-18: 1.125rem;
   --text-16: 1rem;
   --text-14: 0.875rem;
+  --text-10: 0.625rem;
 
   --font-work-sans: var(--work-sans);
   --font-outfit: var(--outfit);
@@ -47,11 +48,11 @@
   --color-border: oklch(0.4 0 275);
   --color-border-muted: oklch(0.3 0 275);
   --color-primary: oklch(0.76 0.3 275);
-  --color-secondary: oklch(0.76 0.2 95);
-  --color-danger: oklch(0.7 0.2 30);
-  --color-warning: oklch(0.7 0.2 100);
-  --color-success: oklch(0.7 0.2 160);
-  --color-info: oklch(0.7 0.2 260);
+  --color-secondary: oklch(0.76 0.1 95);
+  --color-danger: oklch(0.7 0.1 30);
+  --color-warning: oklch(0.7 0.1 100);
+  --color-success: oklch(0.7 0.1 160);
+  --color-info: oklch(0.7 0.1 260);
 }
 
 @layer base {
@@ -83,5 +84,35 @@
 
   .animate-out {
     @apply opacity-0 scale-50 pointer-events-none;
+  }
+
+  .toast-in {
+    animation: slideInRight 0.3s ease-out forwards;
+  }
+
+  .toast-out {
+    animation: slideOutRight 0.3s ease-in forwards;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit, Work_Sans } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import ToastProvider from "@/components/ui/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,13 +36,15 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${workSans.variable} ${outfit.variable} antialiased bg-bg-dark`}
-        >
-          {children}
-        </body>
-      </html>
+      <ToastProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} ${workSans.variable} ${outfit.variable} antialiased bg-bg-dark`}
+          >
+            {children}
+          </body>
+        </html>
+      </ToastProvider>
     </ClerkProvider>
   );
 }
