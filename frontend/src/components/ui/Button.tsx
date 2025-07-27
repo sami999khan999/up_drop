@@ -1,7 +1,7 @@
-import React from "react";
-import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { cva, VariantProps } from "class-variance-authority";
+import React from "react";
+import Spiner from "./Spiner";
 
 export const buttonVariants = cva(
   "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none duration-200 relative overflow-hidden",
@@ -54,7 +54,7 @@ const Button = ({
           isLoading ? "opacity-100 scale-100" : "opacity-0 scale-90"
         )}
       >
-        <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+        <Spiner />
       </span>
 
       <span

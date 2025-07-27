@@ -23,4 +23,5 @@ export type ToastType = {
   varient: ToastVarientType;
   isExiting: boolean;
   isClicked: boolean;
+  isPused: boolean;
 };

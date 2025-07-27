@@ -4,6 +4,8 @@ import { SignUpSchemaType } from "@/types/auth.types";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useToast } from "./useToast";
+import { extractClerkError } from "@/utils/extractError";
 
 export const useAuthSignUp = () => {
   const router = useRouter();
@@ -18,6 +20,8 @@ export const useAuthSignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const toast = useToast();
 
   const onSubmit = useCallback(
     async (data: SignUpSchemaType) => {
@@ -35,41 +39,70 @@ export const useAuthSignUp = () => {
           strategy: "email_code",
         });
 
+        toast({
+          title: "Verification Email Sent",
+          subtitle:
+            "Check your inbox for a 6-digit code to verify your email address.",
+          varient: "success",
+        });
         setVerifying(true);
-      } catch (err) {
+      } catch (err: unknown) {
+        const message = extractClerkError(err);
+        toast({
+          title: "Signup Failed",
+          subtitle: message,
+          varient: "error",
+        });
         setAuthError(true);
         console.log("Auth Error: ", err);
       } finally {
         setIsLoading(false);
       }
     },
-    [isLoaded, signUp]
+    [isLoaded, signUp, toast]
   );
 
-  const handelVerification = useCallback(async () => {
-    if (!isLoaded) return;
+  const handleVerification = useCallback(async () => {
+    if (!isLoaded || isLoading) return;
 
     setIsLoading(true);
 
     try {
-      const reasult = await signUp.attemptEmailAddressVerification({
+      const result = await signUp.attemptEmailAddressVerification({
         code: verificationCode,
       });
 
-      if (reasult.status === "complete") {
-        await setActive({ session: reasult.createdSessionId });
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        toast({
+          title: "Email Verified",
+          subtitle: "Signup successful! Redirecting...",
+          varient: "success",
+        });
+
         router.push("/");
       } else {
         setVerificationCodeError(true);
+        toast({
+          title: "Invalid Code",
+          subtitle: "The verification code is incorrect. Please try again.",
+          varient: "error",
+        });
         console.log("Auth Verification Error");
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      const message = extractClerkError(err);
       setVerificationCodeError(true);
+      toast({
+        title: "Verification Failed",
+        subtitle: message,
+        varient: "error",
+      });
       console.log("Unexpected Auth Verification Error: ", err);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
-  }, [isLoaded, signUp, verificationCode, router, setActive]);
+  }, [isLoaded, isLoading, signUp, verificationCode, router, setActive, toast]);
 
   const resendVerificationCode = useCallback(async () => {
     if (!isLoaded) return;
@@ -78,19 +111,34 @@ export const useAuthSignUp = () => {
 
     try {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      toast({
+        title: "Verification Code Resent",
+        subtitle: "A new verification code has been sent to your email.",
+        varient: "success",
+      });
       setVerifying(true);
-    } catch (err) {
+    } catch (err: unknown) {
+      const message = extractClerkError(err);
+      toast({
+        title: "Resend Failed",
+        subtitle: message,
+        varient: "error",
+      });
       console.log("Resend Verification Error: ", err);
     } finally {
       setIsLoading(false);
     }
-  }, [isLoaded, signUp]);
+  }, [isLoaded, signUp, toast]);
 
   useEffect(() => {
-    if (verificationCode.length === 6) {
-      handelVerification();
-    }
-  }, [verificationCode, handelVerification]);
+    if (verificationCode.length !== 6) return;
+
+    const timeout = setTimeout(() => {
+      handleVerification();
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [verificationCode, handleVerification]);
 
   return {
     onSubmit,

@@ -1,11 +1,11 @@
 "use client";
 
 import { useAuthSignUp } from "@/hooks/useAuthSignUp";
+import { useToast } from "@/hooks/useToast";
 import { cn } from "@/utils/cn";
 import { signUpSchema } from "@/zod/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CiMail, CiUnlock } from "react-icons/ci";
 import AuthFormWrapper from "../ui/AuthFormWrapper";
@@ -13,7 +13,6 @@ import AuthInputField from "../ui/AuthInputField";
 import Button from "../ui/Button";
 import OauthButton from "./OauthButton";
 import SignUpVerification from "./SignUpVerification";
-import { useToast } from "@/hooks/useToast";
 
 const SignUpForm = () => {
   const {
@@ -40,11 +39,6 @@ const SignUpForm = () => {
       confirmPassword: "",
     },
   });
-
-  console.log(verifying);
-  console.log(errors);
-
-  const [veri, setveri] = useState(false);
 
   const toast = useToast();
 
@@ -120,7 +114,7 @@ const SignUpForm = () => {
         onClick={() =>
           toast({
             title: "Test",
-            varient: "success",
+            varient: "error",
             subtitle:
               "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ut nostrum error, placeat perspiciatis nam temporibus aperiam eaque nesciunt. Impedit.",
           })

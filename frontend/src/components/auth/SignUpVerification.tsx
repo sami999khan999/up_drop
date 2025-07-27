@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 import React, { useEffect, useRef, useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import Spiner from "../ui/Spiner";
 
 const SignUpVerification = ({
   isVerifying,
@@ -16,7 +16,7 @@ const SignUpVerification = ({
   const numberOfFields = 6;
   const [codes, setCodes] = useState(new Array(numberOfFields).fill(""));
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
-  const [count, setCount] = useState(20);
+  const [count, setCount] = useState(60);
   const [countdownTrigger, setCountdownTrigger] = useState(false);
 
   const handelChange = (val: string, index: number) => {
@@ -85,7 +85,7 @@ const SignUpVerification = ({
     await resendCode();
 
     if (!isLoading) {
-      setCount(20);
+      setCount(60);
       setCountdownTrigger((prev) => !prev);
     }
   };
@@ -117,10 +117,6 @@ const SignUpVerification = ({
       }
     };
   }, [isVerifying, countdownTrigger]);
-
-  console.log("===========================");
-  console.log(isLoading);
-  console.log("===========================");
 
   return (
     <div
@@ -156,7 +152,7 @@ const SignUpVerification = ({
           <div
             className={cn(
               "absolute bg-bg text-14 duration-200 h-full w-full flex items-center justify-center rounded-md",
-              count > 0
+              count > 0 && !isLoading
                 ? "translate-y-0 animate-in"
                 : "translate-y-full animate-out"
             )}
@@ -178,12 +174,12 @@ const SignUpVerification = ({
           <div
             className={cn(
               "absolute bg-bg text-14 duration-200 h-full w-full flex items-center justify-center rounded-md",
-              count === 0 && isLoading
+              isLoading
                 ? "translate-y-0 animate-in"
                 : "translate-y-full animate-out"
             )}
           >
-            <AiOutlineLoading3Quarters className="animate-spin text-xl" />
+            <Spiner />
           </div>
         </div>
       </div>

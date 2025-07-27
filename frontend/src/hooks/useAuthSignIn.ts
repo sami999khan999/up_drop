@@ -4,6 +4,8 @@ import { SignInSchemaType } from "@/types/auth.types";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { useToast } from "./useToast";
+import { extractClerkError } from "@/utils/extractError";
 
 export const useAuthSIgnIn = () => {
   const router = useRouter();
@@ -13,6 +15,8 @@ export const useAuthSIgnIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const toast = useToast();
 
   const onSubmit = useCallback(
     async (data: SignInSchemaType) => {
@@ -28,14 +32,30 @@ export const useAuthSIgnIn = () => {
 
         if (reasult.status === "complete") {
           await setActive({ session: reasult.createdSessionId });
+          toast({
+            title: "Login Success",
+            subtitle: "Redirecting...",
+            varient: "success",
+          });
           router.push("/");
         } else {
           setAuthError(true);
+          toast({
+            title: "Login Error",
+            subtitle: "Check your credentials",
+            varient: "error",
+          });
           console.log("Auth Login Error");
         }
-      } catch (error) {
+      } catch (err: unknown) {
+        const message = extractClerkError(err);
+        toast({
+          title: "Unexpected Login Error",
+          subtitle: message,
+          varient: "error",
+        });
         setAuthError(true);
-        console.log("Unexpected Auth Login Error: ", error);
+        console.log("Unexpected Auth Login Error: ", err);
       } finally {
         setIsLoading(false);
       }

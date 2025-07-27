@@ -1,5 +1,6 @@
 "use client";
 
+import Spiner from "@/components/ui/Spiner";
 import { AuthenticateWithRedirectCallback, useAuth } from "@clerk/nextjs";
 
 export default function SsoCallbackPage() {
@@ -9,5 +10,12 @@ export default function SsoCallbackPage() {
     return <div>Loading...</div>;
   }
 
-  return <AuthenticateWithRedirectCallback />;
+  return (
+    <div className="h-screen">
+      <AuthenticateWithRedirectCallback />
+      <div className="flex items-center justify-center text-text h-screen">
+        <Spiner className="text-32" />
+      </div>
+    </div>
+  );
 }
