@@ -1,9 +1,23 @@
+import SideBar from "@/components/layout/SideBar";
+import { cn } from "@/utils/cn";
 import React from "react";
 
-const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="w-[95%] mx-auto 2xl:w-[1300px] lg:w-[90%]">{children}</div>
+    <div className="flex">
+      <SideBar />
+
+      <div className="flex-1 flex justify-center">
+        <div
+          className={cn(
+            "w-[calc(100%-3.5rem)] md:w-[calc(100%-4rem)] xl:w-[1100px] 2xl:w-[1300px] px-space-md lg:px-space ml-auto xl:ml-0 bg-white"
+          )}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default layout;
+export default Layout;

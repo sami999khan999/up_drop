@@ -29,6 +29,7 @@
   --spacing-space-xl: 2rem;
   --spacing-space-lg: 1.5rem;
   --spacing-space-base: 1.25rem;
+  --spacing-space-md: 0.9rem;
   --spacing-space-sm: 0.6rem;
   --spacing-space-xs: 0.25rem;
 
@@ -42,13 +43,13 @@
   --color-bg-dark: oklch(0.1 0 275);
   --color-bg: oklch(0.15 0 275);
   --color-bg-light: oklch(0.2 0 275);
-  --color-text: oklch(0.96 0 275);
+  --color-text: oklch(0.9 0 275);
   --color-text-muted: oklch(0.76 0 275);
   --color-highlight: oklch(0.5 0 275);
   --color-border: oklch(0.4 0 275);
   --color-border-muted: oklch(0.3 0 275);
-  --color-primary: oklch(0.76 0.3 275);
-  --color-secondary: oklch(0.76 0.1 95);
+  --color-primary: oklch(0.76 0.2 275);
+  --color-secondary: oklch(0.76 0.1 75);
   --color-danger: oklch(0.7 0.1 30);
   --color-warning: oklch(0.7 0.1 100);
   --color-success: oklch(0.7 0.1 160);
@@ -92,6 +93,33 @@
 
   .toast-out {
     animation: slideOutRight 0.3s ease-in forwards;
+  }
+
+  .bg-pattern {
+    background-color: #030303;
+    /* opacity: 0.8; */
+    background-image: repeating-linear-gradient(
+        45deg,
+        #0b0b0b 25%,
+        transparent 25%,
+        transparent 75%,
+        #0b0b0b 75%,
+        #0b0b0b
+      ),
+      repeating-linear-gradient(
+        45deg,
+        #0b0b0b 25%,
+        #030303 25%,
+        #030303 75%,
+        #0b0b0b 75%,
+        #0b0b0b
+      );
+    background-position: 0 0, 9px 9px;
+    background-size: 18px 18px;
+  }
+
+  .sidebar-spacing {
+    @apply pl-[0.5rem] md:pl-[0.8rem] xl:pl-[0.95rem] mx-space-sm py-space-sm;
   }
 }
 
