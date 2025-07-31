@@ -2,7 +2,6 @@ import { AiFillHome, AiOutlineHome } from "react-icons/ai";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { GoFileDirectory, GoFileDirectoryFill } from "react-icons/go";
 import { MdDelete, MdDeleteOutline } from "react-icons/md";
-import { VscFiles } from "react-icons/vsc";
 
 export const SIDEBAR_ITEMS = [
   {

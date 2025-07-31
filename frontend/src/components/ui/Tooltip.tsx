@@ -86,7 +86,7 @@ const Tooltip = ({
       window.removeEventListener("resize", calculatePosition);
       window.removeEventListener("scroll", calculatePosition);
     };
-  }, [visible, position, offset]);
+  }, [visible, position, offset, calculatePosition]);
 
   return (
     <>

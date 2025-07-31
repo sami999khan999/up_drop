@@ -1,17 +1,16 @@
 "use client";
-import { useAuth, useClerk } from "@clerk/nextjs";
-import React, { useEffect } from "react";
+import { useClerk } from "@clerk/nextjs";
 
 const Page = () => {
   const { signOut } = useClerk();
-  const { userId, isLoaded } = useAuth();
+  // const { userId, isLoaded } = useAuth();
 
   return (
     <div>
       <button onClick={() => signOut()} className="text-text">
         Logout
       </button>
-      <p>Your user ID is: {userId}</p>
+      {/* <p>Your user ID is: {userId}</p> */}
       {/* <h3 className="text-text">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
         laboriosam quam quisquam delectus consequatur? Aliquid beatae deleniti

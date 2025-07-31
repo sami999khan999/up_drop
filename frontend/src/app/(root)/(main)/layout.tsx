@@ -10,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex-1 flex justify-center">
         <div
           className={cn(
-            "w-[calc(100%-3.5rem)] md:w-[calc(100%-4rem)] xl:w-[1100px] 2xl:w-[1300px] px-space-md lg:px-space ml-auto xl:ml-0 bg-white"
+            "w-[calc(100%-3.5rem)] md:w-[calc(100%-4rem)] xl:w-[1100px] 2xl:w-[1300px] min-h-screen px-space-md lg:px-space ml-auto xl:ml-0 bg-white"
           )}
         >
           {children}
