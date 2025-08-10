@@ -11,21 +11,6 @@ const publicRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, request) => {
   const { userId } = await auth();
   const isPublic = publicRoute(request);
-  const searchParams = request.nextUrl.searchParams;
-
-  // inside middleware before any returns
-  console.log("MW -> path:", request.nextUrl.href);
-  console.log(
-    "MW -> has handshake:",
-    request.nextUrl.searchParams.has("__clerk_handshake")
-  );
-  console.log("MW -> cookies:", request.headers.get("cookie"));
-  console.log("MW -> userId:", userId);
-
-  // Allow requests that contain Clerk's handshake token (important)
-  if (searchParams.has("__clerk_handshake")) {
-    return NextResponse.next();
-  }
 
   if (userId && isPublic) {
     return NextResponse.redirect(new URL("/", request.url));

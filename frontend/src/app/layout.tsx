@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Outfit, Work_Sans } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ToastProvider from "@/components/ui/ToastProvider";
+import ClerkHandshakeClient from "@/components/auth/ClerkHandshakeClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
           <body
             className={`${geistSans.variable} ${geistMono.variable} ${workSans.variable} ${outfit.variable} antialiased bg-bg-dark`}
           >
+            <ClerkHandshakeClient />
             {children}
           </body>
         </html>
