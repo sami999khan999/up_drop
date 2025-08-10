@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ToastProvider from "@/components/ui/ToastProvider";
 import ClerkHandshakeClient from "@/components/auth/ClerkHandshakeClient";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +43,9 @@ export default function RootLayout({
           <body
             className={`${geistSans.variable} ${geistMono.variable} ${workSans.variable} ${outfit.variable} antialiased bg-bg-dark`}
           >
-            <ClerkHandshakeClient />
+            <Suspense>
+              <ClerkHandshakeClient />
+            </Suspense>
             {children}
           </body>
         </html>
