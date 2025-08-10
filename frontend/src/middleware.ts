@@ -4,16 +4,17 @@ import { NextResponse } from "next/server";
 const publicRoute = createRouteMatcher([
   "/login(.*)",
   "/register(.*)",
-  "/sso-callback(.*)", // allow OAuth finalization without blocking
+  "/sso-callback(.*)",
   "/not-found(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
   const { userId } = await auth();
   const isPublic = publicRoute(request);
+  const searchParams = request.nextUrl.searchParams;
 
-  // Allow /sso-callback even if no userId yet
-  if (request.nextUrl.pathname.startsWith("/sso-callback")) {
+  // Allow requests that contain Clerk's handshake token (important)
+  if (searchParams.has("__clerk_handshake")) {
     return NextResponse.next();
   }
 
@@ -24,13 +25,13 @@ export default clerkMiddleware(async (auth, request) => {
   if (!isPublic && !userId) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-
-  return NextResponse.next();
 });
 
 export const config = {
   matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };
