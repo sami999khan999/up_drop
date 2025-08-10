@@ -1,7 +1,23 @@
+// src/app/sso-callback/page.tsx
 "use client";
 
-import { AuthenticateWithRedirectCallback } from "@clerk/nextjs";
+import Spiner from "@/components/ui/Spiner";
+import { AuthenticateWithRedirectCallback, useAuth } from "@clerk/nextjs";
 
 export default function SsoCallbackPage() {
-  return <AuthenticateWithRedirectCallback />;
+  const { isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen text-text">
+        <Spiner className="text-32" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen">
+      <AuthenticateWithRedirectCallback />
+    </div>
+  );
 }
