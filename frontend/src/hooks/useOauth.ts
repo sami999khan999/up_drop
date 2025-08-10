@@ -1,6 +1,5 @@
-// src/hooks/useOauth.ts
 import { extractClerkError } from "@/utils/extractError";
-import { useSignIn } from "@clerk/nextjs"; // <-- useAuth is no longer needed here
+import { useSignIn } from "@clerk/nextjs";
 import { useCallback, useState } from "react";
 import { useToast } from "./useToast";
 
@@ -33,7 +32,7 @@ export const useOauth = () => {
     } finally {
       setIsLoadingGoogle(false);
     }
-  }, [signIn, isLoaded, toast]); // <-- userId is removed from the dependency array
+  }, [signIn, isLoaded, toast]);
 
   const githubOauth = useCallback(async () => {
     if (!isLoaded) return;
@@ -57,7 +56,7 @@ export const useOauth = () => {
     } finally {
       setIsLoadingGithub(false);
     }
-  }, [signIn, isLoaded, toast]); // <-- userId is removed from the dependency array
+  }, [signIn, isLoaded, toast]);
 
   return {
     googleOauth,
