@@ -1,3 +1,4 @@
+// useOauth.ts (improved)
 import { extractClerkError } from "@/utils/extractError";
 import { useSignIn } from "@clerk/nextjs";
 import { useCallback, useState } from "react";
@@ -10,16 +11,19 @@ export const useOauth = () => {
 
   const toast = useToast();
 
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+
+  console.log(origin);
+
   const googleOauth = useCallback(async () => {
     if (!isLoaded) return;
-
     setIsLoadingGoogle(true);
 
     try {
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
-        redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
+        redirectUrl: `${origin}/sso-callback`,
+        redirectUrlComplete: `${origin}/`,
       });
     } catch (err) {
       const message = extractClerkError(err);
@@ -29,21 +33,19 @@ export const useOauth = () => {
         varient: "error",
       });
       console.log("Google Oauth Error: ", err);
-    } finally {
       setIsLoadingGoogle(false);
     }
-  }, [signIn, isLoaded, toast]);
+  }, [signIn, isLoaded, toast, origin]);
 
   const githubOauth = useCallback(async () => {
     if (!isLoaded) return;
-
     setIsLoadingGithub(true);
 
     try {
       await signIn.authenticateWithRedirect({
         strategy: "oauth_github",
-        redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
+        redirectUrl: `${origin}/sso-callback`,
+        redirectUrlComplete: `${origin}/`,
       });
     } catch (err) {
       const message = extractClerkError(err);
@@ -53,10 +55,9 @@ export const useOauth = () => {
         varient: "error",
       });
       console.log("Github Oauth Error: ", err);
-    } finally {
       setIsLoadingGithub(false);
     }
-  }, [signIn, isLoaded, toast]);
+  }, [signIn, isLoaded, toast, origin]);
 
   return {
     googleOauth,
