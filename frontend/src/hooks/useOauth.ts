@@ -23,7 +23,7 @@ export const useOauth = () => {
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: `${origin}/sso-callback`,
-        redirectUrlComplete: `${origin}/`,
+        redirectUrlComplete: `${origin}/sso-callback`,
       });
     } catch (err) {
       const message = extractClerkError(err);
@@ -45,7 +45,7 @@ export const useOauth = () => {
       await signIn.authenticateWithRedirect({
         strategy: "oauth_github",
         redirectUrl: `${origin}/sso-callback`,
-        redirectUrlComplete: `${origin}/`,
+        redirectUrlComplete: `${origin}/sso-callback`,
       });
     } catch (err) {
       const message = extractClerkError(err);
