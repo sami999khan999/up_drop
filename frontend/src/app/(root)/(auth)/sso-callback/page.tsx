@@ -17,7 +17,7 @@ export default function SsoCallbackPage() {
 
   return (
     <div className="h-screen">
-      <AuthenticateWithRedirectCallback redirectUrl="/" />
+      <AuthenticateWithRedirectCallback />
     </div>
   );
 }
