@@ -1,24 +1,18 @@
 // src/hooks/useOauth.ts
 import { extractClerkError } from "@/utils/extractError";
-import { useSignIn, useAuth } from "@clerk/nextjs";
+import { useSignIn } from "@clerk/nextjs"; // <-- useAuth is no longer needed here
 import { useCallback, useState } from "react";
 import { useToast } from "./useToast";
 
 export const useOauth = () => {
   const { signIn, isLoaded } = useSignIn();
-  const { userId } = useAuth(); // <-- Import and use the useAuth hook to get the userId
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [isLoadingGithub, setIsLoadingGithub] = useState(false);
 
   const toast = useToast();
 
   const googleOauth = useCallback(async () => {
-    if (!isLoaded) return; // Check if the user is already authenticated
-    if (userId) {
-      // Redirect to the home page if a session already exists
-      window.location.href = "/";
-      return;
-    }
+    if (!isLoaded) return;
 
     setIsLoadingGoogle(true);
 
@@ -39,15 +33,10 @@ export const useOauth = () => {
     } finally {
       setIsLoadingGoogle(false);
     }
-  }, [signIn, isLoaded, toast, userId]); // <-- Add userId to the dependency array
+  }, [signIn, isLoaded, toast]); // <-- userId is removed from the dependency array
 
   const githubOauth = useCallback(async () => {
-    if (!isLoaded) return; // Check if the user is already authenticated
-    if (userId) {
-      // Redirect to the home page if a session already exists
-      window.location.href = "/";
-      return;
-    }
+    if (!isLoaded) return;
 
     setIsLoadingGithub(true);
 
@@ -68,7 +57,7 @@ export const useOauth = () => {
     } finally {
       setIsLoadingGithub(false);
     }
-  }, [signIn, isLoaded, toast, userId]); // <-- Add userId to the dependency array
+  }, [signIn, isLoaded, toast]); // <-- userId is removed from the dependency array
 
   return {
     googleOauth,
