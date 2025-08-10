@@ -1,4 +1,6 @@
 "use client";
+import Button from "@/components/ui/Button";
+import Tooltip from "@/components/ui/Tooltip";
 import { useClerk } from "@clerk/nextjs";
 
 const Page = () => {
@@ -25,6 +27,11 @@ const Page = () => {
         dolore harum suscipit impedit cum corrupti, sint omnis minima.
         Reprehenderit libero optio iure, esse minima accusantium.
       </h3> */}
+      <div className="absolute top-0 right-0">
+        <Tooltip content="Tooltip">
+          <Button>Hello</Button>
+        </Tooltip>
+      </div>
     </div>
   );
 };

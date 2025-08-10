@@ -1,92 +1,112 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import Portal from "./Portal";
 import { cn } from "@/utils/cn";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import Portal from "./Portal";
 
 type TooltipProps = {
   content: string;
   children: React.ReactNode;
   offset?: number;
-  position?: "top" | "bottom" | "left" | "right";
 };
 
-const Tooltip = ({
+const DEBOUNCE_MS = 50;
+const VIEWPORT_PADDING = 8;
+
+export default function Tooltip({
   content,
   children,
-  offset = 8,
-  position = "bottom",
-}: TooltipProps) => {
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const tooltipRef = useRef<HTMLDivElement | null>(null);
+  offset = 0,
+}: TooltipProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const [visible, setVisible] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
-  const [currentPos, setCurrentPos] = useState(position);
 
-  const calculatePosition = () => {
-    if (!wrapperRef.current || !tooltipRef.current) return;
+  const calculatePosition = useCallback(() => {
+    const tipRect = tooltipRef.current?.getBoundingClientRect();
+    const elmRect = wrapperRef.current?.getBoundingClientRect();
+    if (!tipRect || !elmRect) return;
 
-    const target = wrapperRef.current.getBoundingClientRect();
-    const tip = tooltipRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    const positions: Record<
-      "top" | "bottom" | "left" | "right",
-      { fits: boolean; top: number; left: number }
-    > = {
-      right: {
-        fits: target.right + offset + tip.width <= vw,
-        top: target.top + target.height / 2 - tip.height / 2,
-        left: target.right + offset,
-      },
-      bottom: {
-        fits: target.bottom + offset + tip.height <= vh,
-        top: target.bottom + offset,
-        left: target.left + target.width / 2 - tip.width / 2,
-      },
-      top: {
-        fits: target.top - offset - tip.height >= 0,
-        top: target.top - tip.height - offset,
-        left: target.left + target.width / 2 - tip.width / 2,
-      },
-      left: {
-        fits: target.left - offset - tip.width >= 0,
-        top: target.top + target.height / 2 - tip.height / 2,
-        left: target.left - tip.width - offset,
-      },
+    const { innerWidth: vw, innerHeight: vh } = window;
+    const space = {
+      top: elmRect.top,
+      bottom: vh - elmRect.bottom,
+      left: elmRect.left,
+      right: vw - elmRect.right,
     };
 
-    let chosenPos = position;
-    if (!positions[position].fits) {
-      const fallback = (
-        Object.keys(positions) as Array<keyof typeof positions>
-      ).find((pos) => positions[pos].fits);
-      chosenPos = fallback ?? position;
+    let top: number;
+    let left: number;
+
+    const fitsRight = space.right >= tipRect.width + offset;
+    const fitsLeft = space.left >= tipRect.width + offset;
+    const fitsBottom = space.bottom >= tipRect.height + offset;
+    const fitsTop = space.top >= tipRect.height + offset;
+
+    if (fitsRight) {
+      left = elmRect.right + offset;
+    } else if (fitsLeft) {
+      left = elmRect.left - tipRect.width - offset;
+    } else {
+      left = elmRect.left + elmRect.width / 2 - tipRect.width / 2;
     }
 
-    const { top: rawTop, left: rawLeft } = positions[chosenPos];
+    if (fitsBottom) {
+      top = elmRect.bottom + offset;
+    } else if (fitsTop) {
+      top = elmRect.top - tipRect.height - offset;
+    } else {
+      top = elmRect.top + elmRect.height / 2 - tipRect.height / 2;
+    }
 
-    const top = Math.max(5, Math.min(rawTop, vh - tip.height - 5));
-    const left = Math.max(5, Math.min(rawLeft, vw - tip.width - 5));
+    top = Math.max(
+      VIEWPORT_PADDING,
+      Math.min(top, vh - tipRect.height - VIEWPORT_PADDING)
+    );
+    left = Math.max(
+      VIEWPORT_PADDING,
+      Math.min(left, vw - tipRect.width - VIEWPORT_PADDING)
+    );
 
     setCoords({ top, left });
-    setCurrentPos(chosenPos);
-  };
+  }, [offset]);
+
+  useLayoutEffect(() => {
+    if (!visible) return;
+
+    const mountTimer = window.setTimeout(calculatePosition, 0);
+
+    let debounceTimer: number;
+    const handler = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(calculatePosition, DEBOUNCE_MS);
+    };
+
+    window.addEventListener("resize", handler);
+    window.addEventListener("scroll", handler, { passive: true });
+
+    return () => {
+      clearTimeout(mountTimer);
+      clearTimeout(debounceTimer);
+      window.removeEventListener("resize", handler);
+      window.removeEventListener("scroll", handler);
+    };
+  }, [visible, calculatePosition]);
 
   useEffect(() => {
     if (!visible) return;
-
-    calculatePosition();
-    window.addEventListener("resize", calculatePosition);
-    window.addEventListener("scroll", calculatePosition, { passive: true });
-
-    return () => {
-      window.removeEventListener("resize", calculatePosition);
-      window.removeEventListener("scroll", calculatePosition);
-    };
-  }, [visible, position, offset, calculatePosition]);
+    const onClickOutside = () => setVisible(false);
+    window.addEventListener("mousedown", onClickOutside);
+    return () => window.removeEventListener("mousedown", onClickOutside);
+  }, [visible]);
 
   return (
     <>
@@ -94,26 +114,27 @@ const Tooltip = ({
         ref={wrapperRef}
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
-        // className="inline-block"
       >
         {children}
       </div>
 
-      <Portal>
-        <div
-          ref={tooltipRef}
-          className={cn(
-            "fixed px-space-md py-space-xs bg-bg-light text-16 text-sm rounded shadow z-50 pointer-events-none border border-border-muted duration-300 text-text-muted",
-            visible ? "opacity-100" : "opacity-0"
-          )}
-          style={{ top: coords.top, left: coords.left }}
-          data-position={currentPos}
-        >
-          {content}
-        </div>
-      </Portal>
+      {typeof window !== "undefined" && (
+        <Portal>
+          <div
+            ref={tooltipRef}
+            className={cn(
+              "fixed z-50 pointer-events-none transition-opacity duration-300",
+              "px-space-sm py-space-xs rounded-sm border shadow-md text-sm",
+              "bg-bg-dark border border-border-muted text-text",
+              visible ? "opacity-100" : "opacity-0"
+            )}
+            style={{ top: coords.top, left: coords.left }}
+            aria-hidden
+          >
+            {content}
+          </div>
+        </Portal>
+      )}
     </>
   );
-};
-
-export default Tooltip;
+}

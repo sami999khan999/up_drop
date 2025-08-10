@@ -16,7 +16,7 @@ const SideMenu = () => {
   return (
     <div
       className={cn(
-        "h-screen bg-bg text-text-muted transition-all duration-300 ease-in-out flex flex-col py-space-sm shadow-md border-r border-border-muted absolute xl:static",
+        "h-screen bg-bg text-text-muted transition-all duration-300 ease-in-out flex flex-col py-space-sm shadow-md border-r border-border-muted absolute xl:static overflow-hidden",
         isOpen
           ? "w-[12rem] xl:w-[14rem] 2xl:w-[17rem]"
           : "w-[3.5rem] md:w-[4rem] xl:w-[4.5rem]"
@@ -33,7 +33,7 @@ const SideMenu = () => {
         />
         <p
           className={cn(
-            "text-text text-16 lg:text-24 font-semibold tracking-tight transition-opacity duration-300 line-clamp-1",
+            "text-text lg:text-18 font-semibold tracking-tight transition-opacity duration-300 line-clamp-1",
             isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
         >
@@ -48,40 +48,36 @@ const SideMenu = () => {
         {SIDEBAR_ITEMS.map((item) => {
           const isActive = pathname === item.href;
 
-          const linkContent = (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-space-md sidebar-spacing rounded-md transition-all duration-200 hover:bg-bg-light",
-                isActive && "bg-border-muted text-text hover:bg-primary"
-              )}
-            >
-              <span className="w-[1rem] shrink-0 text-lg">
-                {isActive ? item.iconActive : item.icon}
-              </span>
-              <p
+          return (
+            <Link key={item.href} href={item.href}>
+              <div
                 className={cn(
-                  "transition-opacity duration-300 line-clamp-1 overflow-hidden",
-                  isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                  "flex items-center gap-space-md sidebar-spacing rounded-md transition-all duration-200 hover:bg-bg-light",
+                  isActive && "bg-border-muted text-text hover:bg-primary"
                 )}
               >
-                {item.name}
-              </p>
-            </Link>
-          );
+                {isOpen ? (
+                  <span className="w-[1rem] shrink-0 text-lg">
+                    {isActive ? item.iconActive : item.icon}
+                  </span>
+                ) : (
+                  <Tooltip content={item.name} offset={2}>
+                    <span className="w-[1rem] shrink-0 text-lg">
+                      {isActive ? item.iconActive : item.icon}
+                    </span>
+                  </Tooltip>
+                )}
 
-          return isOpen ? (
-            linkContent
-          ) : (
-            <Tooltip
-              key={item.href}
-              content={item.name}
-              offset={-6}
-              position="right"
-            >
-              {linkContent}
-            </Tooltip>
+                <p
+                  className={cn(
+                    "transition-opacity duration-300 line-clamp-1 overflow-hidden",
+                    isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                  )}
+                >
+                  {item.name}
+                </p>
+              </div>
+            </Link>
           );
         })}
       </div>
@@ -98,7 +94,7 @@ const SideMenu = () => {
             <RiMenuUnfold2Fill className="shrink-0" />
           </span>
         ) : (
-          <Tooltip content="Collapse Menu">
+          <Tooltip content="Collapse Menu" offset={2}>
             <span className="w-[1rem]">
               <RiMenuUnfold2Fill className="shrink-0" />
             </span>
