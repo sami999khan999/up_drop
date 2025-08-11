@@ -1,23 +1,26 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const publicRoute = createRouteMatcher([
-  "/login(.*)",
-  "/register(.*)",
-  "/sso-callback(.*)",
-  "/not-found(.*)",
-]);
-
-export default clerkMiddleware(async (auth, request) => {
+export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
-  const isPublic = publicRoute(request);
+  const url = new URL(req.url);
+  const path = url.pathname;
 
+  // Define public routes manually
+  const publicRoutes = ["/login", "/register", "/sso-callback", "/not-found"];
+
+  const isPublic = publicRoutes.some(
+    (route) => path === route || path.startsWith(`${route}/`)
+  );
+
+  // If logged in and trying to visit a public page → redirect to home
   if (userId && isPublic) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (!isPublic && !userId) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // If not logged in and visiting a private page → redirect to login
+  if (!userId && !isPublic) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();
