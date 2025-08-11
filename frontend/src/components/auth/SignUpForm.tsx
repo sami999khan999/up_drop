@@ -14,7 +14,7 @@ import Button from "../ui/Button";
 import OauthButton from "./OauthButton";
 import SignUpVerification from "./SignUpVerification";
 import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
   const { userId } = useAuth();
