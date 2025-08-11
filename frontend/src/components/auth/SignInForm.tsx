@@ -3,20 +3,22 @@
 import { useAuthSIgnIn } from "@/hooks/useAuthSignIn";
 import { signInSchema } from "@/zod/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { CiLock, CiMail, CiUnlock } from "react-icons/ci";
-import AuthFormWrapper from "../ui/AuthFormWrapper";
 import AuthInputField from "../ui/AuthInputField";
-import Button from "../ui/Button";
 import OauthButton from "./OauthButton";
+import AuthFormWrapper from "../ui/AuthFormWrapper";
+import { CiLock, CiMail, CiUnlock } from "react-icons/ci";
+import Button from "../ui/Button";
+import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const SignInForm = () => {
-  // const { userId } = useAuth();
+  const { userId } = useAuth();
 
-  // if (userId) {
-  //   redirect("/");
-  // }
+  if (userId) {
+    redirect("/");
+  }
 
   const { onSubmit, showPassword, setShowPassword, isLoading } =
     useAuthSIgnIn();
