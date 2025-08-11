@@ -13,8 +13,18 @@ import AuthInputField from "../ui/AuthInputField";
 import Button from "../ui/Button";
 import OauthButton from "./OauthButton";
 import SignUpVerification from "./SignUpVerification";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 const SignUpForm = () => {
+  const { userId } = useAuth();
+  const router = useRouter();
+
+  if (userId) {
+    router.push("/");
+    return;
+  }
+
   const {
     onSubmit,
     verifying,

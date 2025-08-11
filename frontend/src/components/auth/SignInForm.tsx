@@ -10,8 +10,18 @@ import AuthFormWrapper from "../ui/AuthFormWrapper";
 import { CiLock, CiMail, CiUnlock } from "react-icons/ci";
 import Button from "../ui/Button";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 const SignInForm = () => {
+  const { userId } = useAuth();
+  const router = useRouter();
+
+  if (userId) {
+    router.push("/");
+    return;
+  }
+
   const { onSubmit, showPassword, setShowPassword, isLoading } =
     useAuthSIgnIn();
 
