@@ -1,10 +1,9 @@
+import ToastProvider from "@/components/ui/ToastProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Outfit, Work_Sans } from "next/font/google";
-import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import ToastProvider from "@/components/ui/ToastProvider";
-import ClerkHandshakeClient from "@/components/auth/ClerkHandshakeClient";
 import { Suspense } from "react";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
