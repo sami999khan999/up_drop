@@ -19,6 +19,8 @@ export default clerkMiddleware(async (auth, request) => {
   if (!isPublic && !userId) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+
+  return NextResponse.next();
 });
 
 export const config = {

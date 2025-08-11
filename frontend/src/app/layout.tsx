@@ -43,10 +43,7 @@ export default function RootLayout({
           <body
             className={`${geistSans.variable} ${geistMono.variable} ${workSans.variable} ${outfit.variable} antialiased bg-bg-dark`}
           >
-            <Suspense>
-              <ClerkHandshakeClient />
-            </Suspense>
-            {children}
+            <Suspense>{children}</Suspense>
           </body>
         </html>
       </ToastProvider>

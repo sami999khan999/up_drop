@@ -1,14 +1,15 @@
 "use client";
 
 import { SignInSchemaType } from "@/types/auth.types";
-import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import { useToast } from "./useToast";
 import { extractClerkError } from "@/utils/extractError";
+import { useAuth, useSignIn } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useToast } from "./useToast";
 
 export const useAuthSIgnIn = () => {
   const router = useRouter();
+  const { userId } = useAuth();
 
   const { signIn, isLoaded, setActive } = useSignIn();
 
@@ -62,6 +63,10 @@ export const useAuthSIgnIn = () => {
     },
     [signIn, isLoaded, router, setActive, toast]
   );
+
+  useEffect(() => {
+    if (userId) router.push("/");
+  }, [userId]);
 
   return {
     onSubmit,

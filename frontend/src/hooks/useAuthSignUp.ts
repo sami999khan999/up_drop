@@ -1,7 +1,7 @@
 "use client";
 
 import { SignUpSchemaType } from "@/types/auth.types";
-import { useSignUp } from "@clerk/nextjs";
+import { useAuth, useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useToast } from "./useToast";
@@ -9,6 +9,7 @@ import { extractClerkError } from "@/utils/extractError";
 
 export const useAuthSignUp = () => {
   const router = useRouter();
+  const { userId } = useAuth();
 
   const { signUp, isLoaded, setActive } = useSignUp();
 
@@ -139,6 +140,10 @@ export const useAuthSignUp = () => {
 
     return () => clearTimeout(timeout);
   }, [verificationCode, handleVerification]);
+
+  useEffect(() => {
+    if (userId) router.push("/");
+  }, [userId]);
 
   return {
     onSubmit,
