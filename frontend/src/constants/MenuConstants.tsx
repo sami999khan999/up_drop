@@ -7,25 +7,25 @@ export const SIDEBAR_ITEMS = [
   {
     name: "Home",
     href: "/",
-    icon: <AiOutlineHome size={20} />,
-    iconActive: <AiFillHome size={20} />,
+    icon: <AiOutlineHome size={20} className="shrink-0" />,
+    iconActive: <AiFillHome size={20} className="shrink-0" />,
   },
   {
     name: "Files & Folders",
     href: "/files-folders",
-    icon: <GoFileDirectory size={20} />,
-    iconActive: <GoFileDirectoryFill size={20} />,
+    icon: <GoFileDirectory size={20} className="shrink-0" />,
+    iconActive: <GoFileDirectoryFill size={20} className="shrink-0" />,
   },
   {
     name: "Stared",
     href: "/stared",
-    icon: <FaRegStar size={20} />,
-    iconActive: <FaStar size={20} />,
+    icon: <FaRegStar size={20} className="shrink-0" />,
+    iconActive: <FaStar size={20} className="shrink-0" />,
   },
   {
     name: "Deleted",
     href: "/deleted",
-    icon: <MdDeleteOutline size={20} />,
-    iconActive: <MdDelete size={20} />,
+    icon: <MdDeleteOutline size={20} className="shrink-0" />,
+    iconActive: <MdDelete size={20} className="shrink-0" />,
   },
 ];

@@ -57,14 +57,10 @@ const SideMenu = () => {
                 )}
               >
                 {isOpen ? (
-                  <span className="w-[1rem] shrink-0 text-lg">
-                    {isActive ? item.iconActive : item.icon}
-                  </span>
+                  <span>{isActive ? item.iconActive : item.icon}</span>
                 ) : (
                   <Tooltip content={item.name} offset={2}>
-                    <span className="w-[1rem] shrink-0 text-lg">
-                      {isActive ? item.iconActive : item.icon}
-                    </span>
+                    <span>{isActive ? item.iconActive : item.icon}</span>
                   </Tooltip>
                 )}
 
@@ -90,20 +86,16 @@ const SideMenu = () => {
         className="flex items-center gap-space-sm sidebar-spacing rounded-sm border-0 hover:bg-bg-light focus:ring-2 focus:ring-primary"
       >
         {isOpen ? (
-          <span className="w-[1rem]">
-            <RiMenuUnfold2Fill className="shrink-0" />
-          </span>
+          <RiMenuUnfold2Fill className="shrink-0" />
         ) : (
           <Tooltip content="Collapse Menu" offset={2}>
-            <span className="w-[1rem]">
-              <RiMenuUnfold2Fill className="shrink-0" />
-            </span>
+            <RiMenuUnfold2Fill className="shrink-0" />
           </Tooltip>
         )}
 
         <p
           className={cn(
-            "transition-opacity duration-300 line-clamp-1 overflow-hidden text-14",
+            "transition-opacity duration-300 line-clamp-1 overflow-hidden text-14 shrink-0",
             isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           )}
         >
