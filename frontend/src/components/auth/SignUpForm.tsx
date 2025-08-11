@@ -4,8 +4,10 @@ import { useAuthSignUp } from "@/hooks/useAuthSignUp";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/utils/cn";
 import { signUpSchema } from "@/zod/signUpSchema";
+import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { CiMail, CiUnlock } from "react-icons/ci";
 import AuthFormWrapper from "../ui/AuthFormWrapper";
@@ -13,16 +15,12 @@ import AuthInputField from "../ui/AuthInputField";
 import Button from "../ui/Button";
 import OauthButton from "./OauthButton";
 import SignUpVerification from "./SignUpVerification";
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
   const { userId } = useAuth();
-  const router = useRouter();
 
   if (userId) {
-    router.push("/");
-    return;
+    redirect("/");
   }
 
   const {
